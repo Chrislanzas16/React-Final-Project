@@ -1,13 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import movie_background from "../../assets/background_banner.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "./Movies.css";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 const Movies = () => {
+  const [term, setTerm] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query") || "";
   let navigate = useNavigate();
+
+  async function onSearch(search) {
+    try {
+      const { data } = await axios.get(
+        `https://www.omdbapi.com/?apikey=9c546bc8&s=${search}`
+      );
+      if (data.Response === "True") {
+        const movieShow = data.Search.slice(0, 6);
+        setMovies(movieShow);
+        console.log(movieShow);
+      } else {
+        setMovies([]);
+      }
+    } catch (e) {
+      setMovies([]);
+    }
+  }
+
+  function onKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      onSearch(term);
+    }
+  }
+
+  function onSubmit(event) {
+    event.preventDefault();
+    onSearch(term);
+  }
+
+  useEffect(() => {
+    async function fetchMovies() {
+      if (!query) {
+        setMovies([]);
+        return;
+      }
+      try {
+        const { data } = await axios.get(
+          `https://www.omdbapi.com/?apikey=9c546bc8&s=${query}`
+        );
+        if (data.Response === "True" && Array.isArray(data.Search)) {
+          const results = data.Search.slice(0, 6);
+          setMovies(results);
+        } else {
+          setMovies([]);
+        }
+      } catch (e) {
+        setMovies([]);
+      }
+    }
+    fetchMovies();
+  }, [query]);
+
   return (
     <>
       <div className="background">
@@ -22,7 +80,7 @@ const Movies = () => {
                 src="https://cdn.pixabay.com/photo/2015/12/05/21/45/filmklappe-1078813_1280.png"
                 alt=""
               />
-              <h1 className="nav__bar--title" onClick={()=>navigate("/")}>
+              <h1 className="nav__bar--title" onClick={() => navigate("/")}>
                 <span className="white">Movie Hub</span>
               </h1>
             </div>
@@ -39,10 +97,22 @@ const Movies = () => {
         <div className="browse__movie--wrapper">
           <h2 className="browse__title">Browse our Movies</h2>
           <div className="browse__btn--wrapper">
-            <form>
-              <input id="searchInput" placeholder="Search" />
+            <form onSubmit={onSubmit}>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Search"
+                value={term}
+                onChange={(event) => setTerm(event.target.value)}
+                onKeyDown={onKeyDown}
+              />
 
-              <button className="input__btn" id="searchButton" type="button">
+              <button
+                className="input__btn"
+                id="searchButton"
+                type="button"
+                onClick={() => onSearch(term)}
+              >
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
                   className="fa-solid fa-magnifying-glass"
@@ -55,14 +125,27 @@ const Movies = () => {
       </div>
       <div className="back-color">
         <div className="container">
-          <select id="filter" onChange="filterMovies(event)" defaultValue="">
+          <select id="filter" onchange="filterMovies(event)" defaultValue="">
             <option value="" disabled>
               Sort
             </option>
             <option value="Oldest_To_Newest">Year , Oldest to Newest</option>
             <option value="Newest_To_Oldest">Year , Newest to Oldest</option>
           </select>
-          <div className="movieResults"></div>
+          <div className="movieResults">
+            {movies.map((movie) => (
+              <div
+                className="search_result"
+                key={movie.imdbID}
+                onClick={() => navigate("/movieinfo")}
+              >
+                <img src={movie.Poster} alt="" />
+                Title:{movie.Title}
+                <br></br>
+                Year:{movie.Year}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
