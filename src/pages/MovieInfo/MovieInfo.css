@@ -1,4 +1,63 @@
-.container-background{
-    height: 100vh;
-    background-color: rgba(27, 19, 19, 0.8);
+.container-background {
+  height: 100vh;
+  background-color: rgb(0, 0, 0);
+}
+
+.search_result-info {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  padding: 10px;
+  width: 450px;
+  color: white;
+  text-align: center;
+  margin: 40px 20px 20px 40px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+}
+
+.search_result-info img {
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+.movieResults {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.movie__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+   padding: 40px;
+}
+
+.movie_info-summary{
+    font-size: 20px;
+    color: azure;
+}
+
+.release-date{
+    margin-bottom: 20px;
+    letter-spacing: 1.5px;
+}
+
+.movie_info-summary p {
+    max-width: 500px;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    line-height: 1.5;
+}
+
+.info-title {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: azure;
+    letter-spacing: 1.8px;
 }

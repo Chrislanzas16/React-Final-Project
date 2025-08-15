@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import movie_background from "../../assets/background_banner.jpg";
 import "./Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 
 const Home = () => {
   let navigate = useNavigate();
@@ -26,9 +28,9 @@ const Home = () => {
       `https://www.omdbapi.com/?apikey=9c546bc8&s=${search}`
     );
     if (data.Response === "True") {
-     const movieShow = data.Search.slice(0, 6);
-        setMovies(movieShow);
-      console.log(data.Search)
+      const movieShow = data.Search.slice(0, 6);
+      setMovies(movieShow);
+      console.log(data.Search);
     } else {
       setMovies([]);
     }
@@ -38,20 +40,19 @@ const Home = () => {
     if (event.key === "Enter") {
       event.preventDefault();
       onSearch(term);
-      navigate(`/movies?query=${term}`)
+      navigate(`/movies?query=${term}`);
     }
   }
 
   function onClick() {
     onSearch(term);
-    navigate(`/movies?query=${term}`)
+    navigate(`/movies?query=${term}`);
   }
 
-function onSubmit(event) {
+  function onSubmit(event) {
     event.preventDefault();
     onSearch(term);
   }
-
 
   useEffect(() => {
     getMovies();
@@ -112,9 +113,9 @@ function onSubmit(event) {
               />
             </button>
           </form>
+           <i id="spinner" className="fas fa-spinner hidden"></i>
         </div>
       </div>
-      <i id="spinner" className="fas fa-spinner hidden"></i>
     </>
   );
 };

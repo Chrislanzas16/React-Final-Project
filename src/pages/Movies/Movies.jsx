@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import movie_background from "../../assets/background_banner.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Movies.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
@@ -13,6 +16,7 @@ const Movies = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query") || "";
   let navigate = useNavigate();
+  const { id } = useParams();
 
   async function onSearch(search) {
     try {
@@ -120,7 +124,6 @@ const Movies = () => {
               </button>
             </form>
           </div>
-          <i id="spinner" className="fas fa-spinner hidden"></i>
         </div>
       </div>
       <div className="back-color">
@@ -137,15 +140,16 @@ const Movies = () => {
               <div
                 className="search_result"
                 key={movie.imdbID}
-                onClick={() => navigate("/movieinfo")}
+                onClick={() => navigate(`/movieinfo/${movie.imdbID}`)}
               >
                 <img src={movie.Poster} alt="" />
-                Title:{movie.Title}
+                Title: {movie.Title}
                 <br></br>
-                Year:{movie.Year}
+                Year: {movie.Year}
               </div>
             ))}
           </div>
+          
         </div>
       </div>
     </>
