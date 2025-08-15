@@ -6,7 +6,7 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Movies.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, } from "react-router-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import back_arrow_icon from "../../assets/back_arrow_icon.png";
@@ -65,14 +65,15 @@ const Movies = () => {
 
   function onSubmit(event) {
     event.preventDefault();
+    if (!term.trim());
     setParams({query:term.trim()})
-    onSearch(query);
   }
 
   useEffect(() => {
+    
     setTerm(query)
     fetchMovies(query);
-  }, [query]);
+  }, [searchParams]);
 
   return (
     <>
@@ -112,14 +113,14 @@ const Movies = () => {
                 placeholder="Search"
                 value={term}
                 onChange={(event) => setTerm(event.target.value)}
-                onKeyDown={onKeyDown}
+               
               />
 
               <button
                 className="input__btn"
                 id="searchButton"
-                type="button"
-                onClick={() => onSearch(term)}
+                type="submit"
+                
               >
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
