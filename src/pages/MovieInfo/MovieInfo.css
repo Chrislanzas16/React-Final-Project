@@ -3,6 +3,14 @@
   background-color: rgb(0, 0, 0);
 }
 
+.back_arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    cursor: pointer;
+}
+
 .search_result-info {
   background-color: #1e1e1e;
   border-radius: 10px;

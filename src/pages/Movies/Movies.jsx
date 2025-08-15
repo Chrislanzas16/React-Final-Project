@@ -9,14 +9,14 @@ import "./Movies.css";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import back_arrow_icon from "../../assets/back_arrow_icon.png";
 
 const Movies = () => {
   const [term, setTerm] = useState("");
   const [movies, setMovies] = useState([]);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setParams] = useSearchParams();
   const query = searchParams.get("query") || "";
   let navigate = useNavigate();
-  const { id } = useParams();
 
   async function onSearch(search) {
     try {
@@ -35,6 +35,27 @@ const Movies = () => {
     }
   }
 
+  async function fetchMovies() {
+    if (!query) {
+      setMovies([]);
+      return;
+    }
+
+    try {
+      const { data } = await axios.get(
+        `https://www.omdbapi.com/?apikey=9c546bc8&s=${query}`
+      );
+      if (data.Response === "True" && Array.isArray(data.Search)) {
+        const results = data.Search.slice(0, 6);
+        setMovies(results);
+      } else {
+        setMovies([]);
+      }
+    } catch (e) {
+      setMovies([]);
+    }
+  }
+
   function onKeyDown(event) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -44,30 +65,13 @@ const Movies = () => {
 
   function onSubmit(event) {
     event.preventDefault();
-    onSearch(term);
+    setParams({query:term.trim()})
+    onSearch(query);
   }
 
   useEffect(() => {
-    async function fetchMovies() {
-      if (!query) {
-        setMovies([]);
-        return;
-      }
-      try {
-        const { data } = await axios.get(
-          `https://www.omdbapi.com/?apikey=9c546bc8&s=${query}`
-        );
-        if (data.Response === "True" && Array.isArray(data.Search)) {
-          const results = data.Search.slice(0, 6);
-          setMovies(results);
-        } else {
-          setMovies([]);
-        }
-      } catch (e) {
-        setMovies([]);
-      }
-    }
-    fetchMovies();
+    setTerm(query)
+    fetchMovies(query);
   }, [query]);
 
   return (
@@ -128,6 +132,12 @@ const Movies = () => {
       </div>
       <div className="back-color">
         <div className="container">
+          <img
+            className="back_arrow"
+            src={back_arrow_icon}
+            alt=""
+            onClick={() => navigate(-1)}
+          />
           <select id="filter" onchange="filterMovies(event)" defaultValue="">
             <option value="" disabled>
               Sort
@@ -149,7 +159,6 @@ const Movies = () => {
               </div>
             ))}
           </div>
-          
         </div>
       </div>
     </>
