@@ -58,6 +58,7 @@ const MovieInfo = () => {
             <div className="movie_info-summary">
               <h1 className="info-title"> {movie.Title}</h1>
               <br></br>
+              <h3>Rated: {movie.Rated}</h3>
               <h3 className="release-date"> Release date: {movie.Year}</h3>
               <br></br>
               <p>{movie.Plot}</p>

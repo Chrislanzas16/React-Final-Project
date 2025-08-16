@@ -14,7 +14,6 @@ const Home = () => {
   let navigate = useNavigate();
   const [term, setTerm] = useState("");
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   async function getMovies() {
     const { data } = await axios.get(
@@ -24,7 +23,6 @@ const Home = () => {
   }
 
   async function onSearch(search) {
-    setLoading(true);
     const { data } = await axios.get(
       `https://www.omdbapi.com/?apikey=9c546bc8&s=${search}`
     );
@@ -34,7 +32,6 @@ const Home = () => {
     } else {
       setMovies([]);
     }
-    setLoading(false);
   }
 
   function onKeyDown(event) {
@@ -114,7 +111,11 @@ const Home = () => {
               />
             </button>
           </form>
-          <FontAwesomeIcon icon={faSpinner} id="spinner" className="fas fa-spinner hidden"/>
+          <FontAwesomeIcon
+            icon={faSpinner}
+            id="spinner"
+            className="fas fa-spinner hidden"
+          />
         </div>
       </div>
     </>

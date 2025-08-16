@@ -158,7 +158,9 @@ const Movies = () => {
             />
           )}
           {!loading && movies.length === 0 && (
-            <p className="error-message">No Results Found. Try another search.</p>
+            <p className="error-message">
+              No Results Found. Try another search.
+            </p>
           )}
           {!loading && movies.length > 0 && (
             <div className="movieResults">
