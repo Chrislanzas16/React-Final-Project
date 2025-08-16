@@ -6,7 +6,7 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Movies.css";
-import { Link, } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import back_arrow_icon from "../../assets/back_arrow_icon.png";
@@ -17,6 +17,7 @@ const Movies = () => {
   const [searchParams, setParams] = useSearchParams();
   const query = searchParams.get("query") || "";
   let navigate = useNavigate();
+  const [sort, setSort] = useState("");
 
   async function onSearch(search) {
     try {
@@ -56,22 +57,28 @@ const Movies = () => {
     }
   }
 
-  function onKeyDown(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      onSearch(term);
-    }
+  function filterMovies(sortOrder) {
+    const sorted = [...movies].sort((a, b) => 
+    sortOrder === "Oldest_To_Newest" ? a.Year - b.Year : b.Year - a.Year);
+    setMovies(sorted)
+  }
+
+  function sortChange(event){
+    const value = event.target.value;
+    setSort(value);
+    filterMovies(value)
+
   }
 
   function onSubmit(event) {
     event.preventDefault();
     if (!term.trim());
-    setParams({query:term.trim()})
+    setParams({ query: term.trim() });
+    
   }
 
   useEffect(() => {
-    
-    setTerm(query)
+    setTerm(query);
     fetchMovies(query);
   }, [searchParams]);
 
@@ -113,15 +120,9 @@ const Movies = () => {
                 placeholder="Search"
                 value={term}
                 onChange={(event) => setTerm(event.target.value)}
-               
               />
 
-              <button
-                className="input__btn"
-                id="searchButton"
-                type="submit"
-                
-              >
+              <button className="input__btn" id="searchButton" type="submit">
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
                   className="fa-solid fa-magnifying-glass"
@@ -137,9 +138,14 @@ const Movies = () => {
             className="back_arrow"
             src={back_arrow_icon}
             alt=""
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
           />
-          <select id="filter" onchange="filterMovies(event)" defaultValue="">
+          <select
+            id="filter"
+            value={sort}
+            onChange={sortChange}
+            
+          >
             <option value="" disabled>
               Sort
             </option>
