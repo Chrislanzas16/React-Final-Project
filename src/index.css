@@ -224,10 +224,12 @@ form {
 .fa-spinner {
     animation: rotate 600ms infinite linear;
     position: absolute;
-    margin-top: 300px;
-    font-size: 80px;
+    margin-top: 100px;
+    margin-left: 40%;
+    font-size: 200px;
     color: azure;
     position: relative;
+    
 }
  
 

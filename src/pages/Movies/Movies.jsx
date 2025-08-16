@@ -18,6 +18,7 @@ const Movies = () => {
   const query = searchParams.get("query") || "";
   let navigate = useNavigate();
   const [sort, setSort] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function onSearch(search) {
     try {
@@ -37,6 +38,7 @@ const Movies = () => {
   }
 
   async function fetchMovies() {
+    setLoading(true);
     if (!query) {
       setMovies([]);
       return;
@@ -54,27 +56,28 @@ const Movies = () => {
       }
     } catch (e) {
       setMovies([]);
+    } finally {
+      setLoading(false);
     }
   }
 
   function filterMovies(sortOrder) {
-    const sorted = [...movies].sort((a, b) => 
-    sortOrder === "Oldest_To_Newest" ? a.Year - b.Year : b.Year - a.Year);
-    setMovies(sorted)
+    const sorted = [...movies].sort((a, b) =>
+      sortOrder === "Oldest_To_Newest" ? a.Year - b.Year : b.Year - a.Year
+    );
+    setMovies(sorted);
   }
 
-  function sortChange(event){
+  function sortChange(event) {
     const value = event.target.value;
     setSort(value);
-    filterMovies(value)
-
+    filterMovies(value);
   }
 
   function onSubmit(event) {
     event.preventDefault();
     if (!term.trim());
     setParams({ query: term.trim() });
-    
   }
 
   useEffect(() => {
@@ -140,32 +143,39 @@ const Movies = () => {
             alt=""
             onClick={() => navigate("/")}
           />
-          <select
-            id="filter"
-            value={sort}
-            onChange={sortChange}
-            
-          >
+          <select id="filter" value={sort} onChange={sortChange}>
             <option value="" disabled>
               Sort
             </option>
             <option value="Oldest_To_Newest">Year , Oldest to Newest</option>
             <option value="Newest_To_Oldest">Year , Newest to Oldest</option>
           </select>
-          <div className="movieResults">
-            {movies.map((movie) => (
-              <div
-                className="search_result"
-                key={movie.imdbID}
-                onClick={() => navigate(`/movieinfo/${movie.imdbID}`)}
-              >
-                <img src={movie.Poster} alt="" />
-                Title: {movie.Title}
-                <br></br>
-                Year: {movie.Year}
-              </div>
-            ))}
-          </div>
+          {loading && (
+            <FontAwesomeIcon
+              icon={faSpinner}
+              id="spinner"
+              className="fas fa-spinner "
+            />
+          )}
+          {!loading && movies.length === 0 && (
+            <p className="error-message">No Results Found. Try another search.</p>
+          )}
+          {!loading && movies.length > 0 && (
+            <div className="movieResults">
+              {movies.map((movie) => (
+                <div
+                  className="search_result"
+                  key={movie.imdbID}
+                  onClick={() => navigate(`/movieinfo/${movie.imdbID}`)}
+                >
+                  <img src={movie.Poster} alt="" />
+                  Title: {movie.Title}
+                  <br></br>
+                  Year: {movie.Year}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
