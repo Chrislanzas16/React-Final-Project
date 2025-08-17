@@ -74,3 +74,36 @@
     color: azure;
     letter-spacing: 1.8px;
 }
+
+@media (max-width: 800px) {
+    .movie__info{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .search_result-info{
+        width: 380px;
+    }
+
+    .movie_info-summary p{
+        font-size: 15px;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .search_result-info img {
+       width: 350px;
+       margin: 0 auto;
+    }
+
+    .info-title{
+        font-size: 30px;
+    }
+
+    .movie_info-summary{
+        font-size: 15px;
+    }
+}
